@@ -1,0 +1,6 @@
+numpy
+openpyxl
+pandas
+pyarrow
+pyjanitor
+ipykernel
