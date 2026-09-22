@@ -1,4 +1,4 @@
-# 🚀 Machine Learning Course — Roadmap
+# 🚀 Machine Learning Course Overview
 
 ### A Complete Path from Python to Classical Machine Learning
 
@@ -11,7 +11,7 @@
 
 ---
 
-## 📖 About This Roadmap
+## 📖 About This Course
 
 This repository lays out a **6-module curriculum** designed to build Machine Learning skills from the ground up. Each module combines theory, applied coding, and the exact math needed to understand *why* each technique works — not just how to call it.
 
