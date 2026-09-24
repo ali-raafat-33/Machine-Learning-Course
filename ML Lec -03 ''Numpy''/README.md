@@ -1232,7 +1232,7 @@ Floating-point rounding can make the number of elements differ from what you exp
 | Aalam Al-Barmaja: NumPy, the first step in data science | Arabic | <https://3alam.pro/ibr/articles/python-numpy> |
 | NumPy beginner playlist on YouTube (Egyptian dialect) | Arabic | <https://www.youtube.com/playlist?list=PLvsVwFBrUFQoMuwrcmPzMRLROMqDCOaYS> |
 
-**Original lecture material:** the "NumPy" slide deck prepared and presented by the **TriNode Team**.
+
 
 <div align="center">
 
