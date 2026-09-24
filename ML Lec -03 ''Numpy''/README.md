@@ -1,81 +1,710 @@
-<div dir="rtl">
+<div align="center">
 
-# محاضرة NumPy: أساسيات الحوسبة العددية في بايثون
+<img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/branding/logo/primary/numpylogo.svg" alt="NumPy logo" width="240">
 
-> **تقديم:** فريق TriNode · **المستوى:** مبتدئ · **المدة المقترحة:** 90–120 دقيقة (محاضرة + ورشة تطبيقية)
-> **الإصدار المُختبَر:** Python 3.12 · NumPy 2.4.4 · **آخر تحديث:** 2026-09-24
+# NumPy Fundamentals
 
----
+### A complete, hands-on introduction to numerical computing in Python
 
-## مقدمة موجزة عن المحاضرة وهدفها
+*From creating your first array to solving systems of linear equations.*
 
-**NumPy** (اختصار Numerical Python) هي المكتبة الأساسية للحوسبة العددية في بايثون. تقدّم كائن المصفوفة متعددة الأبعاد `ndarray` مع مجموعة واسعة من الدوال الرياضية، وتعمل نواتها بكود C محسَّن، فتجمع مرونة بايثون وسرعة الكود المُترجَم. عليها تقوم مكتبات تحليل البيانات والتعلّم الآلي مثل pandas وscikit-learn وMatplotlib.
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-2.x-013243?logo=numpy&logoColor=white)
+![Level](https://img.shields.io/badge/Level-Beginner-2ea44f)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-**لماذا تهمّ؟** لأن أي عمل جادّ في تحليل البيانات أو الذكاء الاصطناعي أو المحاكاة العلمية يبدأ بمعالجة المصفوفات. إتقان NumPy يعني كتابة كود أقصر وأسرع وأوضح، دون حلقات تكرار يدوية.
+[Introduction](#1-introduction-and-learning-goals) ·
+[Lecture Content](#2-lecture-content-and-learning-objectives) ·
+[Examples](#3-worked-examples-with-step-by-step-solutions) ·
+[Visuals](#4-visual-illustrations-and-image-guidelines) ·
+[Setup](#5-workshop-requirements-and-setup) ·
+[FAQ](#6-frequently-asked-questions)
 
-**مخرجات التعلّم:** بنهاية المحاضرة يكون الطالب قادرًا على:
-
-1. إنشاء المصفوفات وتغيير أشكالها والوصول إلى عناصرها.
-2. تطبيق العمليات المتجهية (Vectorized) وفهم قاعدة البث (Broadcasting).
-3. حساب الإحصاءات على مستوى المصفوفة كاملة أو على محور محدد (`axis`).
-4. دمج المصفوفات وتصفيتها بالشروط المنطقية.
-5. إجراء عمليات المصفوفات والجبر الخطي الأساسية وحل جملة معادلات خطية.
-
----
-
-## محتوى المحاضرة مقسّم إلى نقاط رئيسية مع توضيح أسئلة/أهداف تعلم لكل نقطة
-
-### 1) إنشاء المصفوفات — `array` · `arange` · `linspace` · `zeros` · `ones`
-- **الهدف:** إنشاء مصفوفة من قائمة بايثون، أو من تسلسل رقمي، أو مصفوفة معبّأة مسبقًا.
-- **أسئلة موجِّهة:**
-  - ما الفرق بين `np.arange(0, 10, 2)` و`np.linspace(0, 10, 2)`؟ (تلميح: `stop` في `arange` مستبعَدة، وفي `linspace` مشمولة، و`num` عدد النقاط لا طول الخطوة.)
-  - لماذا تكون قيم `np.zeros((2, 3))` أعدادًا عشرية افتراضيًا؟ وكيف تُمرَّر `shape`؟
-
-### 2) الشكل والبنية — `reshape` · `ravel`
-- **الهدف:** إعادة ترتيب البيانات نفسها في شكل جديد، وتسطيحها إلى بُعد واحد.
-- **أسئلة موجِّهة:**
-  - لماذا يجب أن يبقى عدد العناصر ثابتًا عند `reshape` (مثل 12 = 3 × 4)؟ وماذا يفعل `-1`؟
-  - ما الفرق بين `ravel()` (عرض View متى أمكن) و`flatten()` (نسخة دائمًا)؟
-
-### 3) الفهرسة والتقطيع — `a[row, col]` · `a[:, col]` · `a[r1:r2, c1:c2]`
-- **الهدف:** الوصول إلى عنصر أو صف أو عمود أو نافذة جزئية من المصفوفة.
-- **أسئلة موجِّهة:**
-  - ماذا تختار `a[:, 1]`؟ وماذا تختار `a[0:2, 1:3]`؟
-  - لماذا تكون نهاية التقطيع مستبعَدة (`start:stop`)؟
-
-### 4) العمليات المتجهية والبث — `+ - * / **` · Broadcasting
-- **الهدف:** تنفيذ العمليات على مصفوفة كاملة دون حلقات، وفهم متى يمكن مطابقة شكلين مختلفين.
-- **أسئلة موجِّهة:**
-  - هل يمكن جمع مصفوفة شكلها `(2, 3)` مع أخرى شكلها `(3,)`؟ ولماذا؟
-  - ما شرط التوافق؟ (تكون الأبعاد متساوية، أو يكون أحدها 1.)
-
-### 5) التجميعات — `sum` · `mean` · `std/var` · `min/max` · `argmin/argmax`
-- **الهدف:** استخلاص مؤشرات رقمية من المصفوفة كاملة أو على طول محور.
-- **أسئلة موجِّهة:**
-  - ما الفرق بين `axis=0` (الجمع نزولًا على كل عمود) و`axis=1` (الجمع عبر كل صف)؟
-  - لماذا تُعيد `argmax` فهرسًا مسطَّحًا حتى في مصفوفة ثنائية؟ وكيف نحوّله إلى (صف، عمود)؟ (`np.unravel_index`)
-
-### 6) الدمج والاستعلام — `concatenate` · `stack` · `where` · `sort/unique` · القناع المنطقي
-- **الهدف:** ضمّ المصفوفات، واختيار القيم بشرط، وترتيبها وحذف تكرارها.
-- **أسئلة موجِّهة:**
-  - متى تستعمل `stack` بدل `concatenate`؟ (`stack` تضيف بُعدًا جديدًا.)
-  - كيف تجمع شرطين في قناع واحد؟ ولماذا نستخدم `&` و`|` وليس `and` و`or`؟
-
-### 7) الرياضيات والجبر الخطي — `*` مقابل `@` · `.T` · `linalg.norm/det/inv/solve`
-- **الهدف:** التمييز بين الضرب العنصري وضرب المصفوفات، وحل المعادلات الخطية.
-- **أسئلة موجِّهة:**
-  - لماذا لا يُعدّ `A * B` ضربَ مصفوفات حقيقيًا؟ وما الأداة الصحيحة؟
-  - لماذا يُفضَّل `solve(A, b)` على `inv(A) @ b`؟ وماذا يعني `det(A) = 0`؟
+</div>
 
 ---
 
-## أمثلة بسيطة تطبيقية مع حلولها الخطية خطوة بخطوة
+| | |
+|---|---|
+| **Presented by** | TriNode Team |
+| **Level** | Beginner (basic Python required) |
+| **Duration** | 90–120 minutes (lecture + hands-on workshop) |
+| **Tested with** | Python 3.12 · NumPy 2.4.4 |
+| **Last updated** | 2026-09-24 |
 
-> جميع المخرجات أدناه ناتجة عن تشغيل فعلي على NumPy 2.4.4. في الإصدارات الأقدم قد تظهر الأنواع بصيغة مختلفة (مثل `(2, 0)` بدل `(np.int64(2), np.int64(0))`).
+## Table of Contents
 
-### المثال 1: إنشاء مصفوفة وتغيير شكلها والوصول إلى أجزائها
+1. [Introduction and Learning Goals](#1-introduction-and-learning-goals)
+2. [Lecture Content and Learning Objectives](#2-lecture-content-and-learning-objectives)
+   - [Module 1: Array Creation](#module-1-array-creation)
+   - [Module 2: Shape and Structure](#module-2-shape-and-structure)
+   - [Module 3: Indexing and Slicing](#module-3-indexing-and-slicing)
+   - [Module 4: Vectorized Operations and Broadcasting](#module-4-vectorized-operations-and-broadcasting)
+   - [Module 5: Aggregations](#module-5-aggregations)
+   - [Module 6: Combining and Querying](#module-6-combining-and-querying)
+   - [Module 7: Matrix Math and Linear Algebra](#module-7-matrix-math-and-linear-algebra)
+   - [Quick Reference Cheat Sheet](#quick-reference-cheat-sheet)
+3. [Worked Examples with Step-by-Step Solutions](#3-worked-examples-with-step-by-step-solutions)
+4. [Visual Illustrations and Image Guidelines](#4-visual-illustrations-and-image-guidelines)
+5. [Workshop Requirements and Setup](#5-workshop-requirements-and-setup)
+6. [Frequently Asked Questions](#6-frequently-asked-questions)
+7. [Sources and References](#7-sources-and-references)
+8. [README Structure and Ready-to-Use Template](#8-readme-structure-and-ready-to-use-template)
 
-**المسألة:** أنشئ الأعداد من 1 إلى 12، ثم رتّبها في مصفوفة 3×4، ثم استخرج العنصر 7، والعمود الأول، والنافذة الوسطى.
+---
+
+## 1. Introduction and Learning Goals
+
+**NumPy** (*Numerical Python*) is the foundation of scientific computing in Python. It provides the `ndarray`, a fast, memory-efficient, N-dimensional array, together with a large library of mathematical functions. Its core is written in optimized C, so you get the flexibility of Python with the speed of compiled code.
+
+Nearly every data-science and machine-learning library (pandas, SciPy, scikit-learn, Matplotlib) is built on NumPy arrays.
+
+**Why it matters**
+
+- **Speed:** vectorized operations replace slow Python loops.
+- **Clarity:** one line such as `a * 2 + 1` replaces a whole loop.
+- **Ecosystem:** the concepts you learn here (shapes, axes, broadcasting) carry into pandas, PyTorch, TensorFlow, and more.
+
+**Learning outcomes.** By the end of this lecture, you will be able to:
+
+1. Create arrays and reshape them.
+2. Access any element, row, column, or sub-block.
+3. Apply vectorized operations and explain broadcasting.
+4. Compute statistics over a whole array or along an `axis`.
+5. Combine, filter, sort, and de-duplicate data.
+6. Perform matrix operations and solve linear systems.
+
+**Learning path**
+
+```mermaid
+flowchart LR
+    A["1. Create<br/>array, arange,<br/>linspace, zeros, ones"] --> B["2. Reshape<br/>reshape, ravel"]
+    B --> C["3. Access<br/>indexing, slicing"]
+    C --> D["4. Compute<br/>vectorized ops,<br/>broadcasting"]
+    D --> E["5. Summarize<br/>sum, mean, std,<br/>min, max, arg*"]
+    E --> F["6. Combine and query<br/>concatenate, stack,<br/>where, sort, mask"]
+    F --> G["7. Linear algebra<br/>@, T, norm, det,<br/>inv, solve"]
+```
+
+> [!NOTE]
+> Every code block in this README was executed on NumPy 2.4.4 and the printed output is the real output. On older NumPy versions, some values print slightly differently (for example `(2, 0)` instead of `(np.int64(2), np.int64(0))`).
+
+---
+
+## 2. Lecture Content and Learning Objectives
+
+All snippets assume:
+
+```python
+import numpy as np
+```
+
+### Module 1: Array Creation
+
+**Learning objective:** create arrays from Python lists, numeric sequences, or pre-filled placeholders.
+
+**Guiding questions**
+1. What is the difference between `np.arange(0, 10, 2)` and `np.linspace(0, 10, 2)`?
+2. Why are the values of `np.zeros((2, 3))` floats by default, and how is `shape` passed?
+
+#### `np.array()`: build an array from a Python list
+
+```python
+a = np.array([1, 2, 3])                 # 1-D from a list
+b = np.array([[1, 2, 3], [4, 5, 6]])    # nested lists -> 2-D
+c = np.array([1, 2.5, 3])               # mixed int/float -> one shared dtype
+
+print(a, a.dtype)
+print(b, b.shape)
+print(c, c.dtype)
+```
+```text
+[1 2 3] int64
+[[1 2 3]
+ [4 5 6]] (2, 3)
+[1.  2.5 3. ] float64
+```
+
+- A list becomes a 1-D array; a list of lists becomes 2-D (or higher).
+- All elements are cast to **one shared dtype** (above, the integers became floats).
+
+#### `np.arange(start, stop, step)`: like `range()`, but returns an array
+
+```python
+print(np.arange(0, 10, 2))      # stop is exclusive
+print(np.arange(5, 0, -1))      # negative step counts down
+print(np.arange(0, 1, 0.25))    # step can be a float
+```
+```text
+[0 2 4 6 8]
+[5 4 3 2 1]
+[0.   0.25 0.5  0.75]
+```
+
+- `stop` is **exclusive**, exactly like Python's `range()`.
+- `step` can be negative or a float.
+
+#### `np.linspace(start, stop, num)`: a fixed number of evenly spaced values
+
+```python
+print(np.linspace(0, 1, 5))                       # 5 points, both ends included
+print(np.linspace(0, 10, 3))
+print(np.linspace(0, 10, 5, endpoint=False))      # exclude the stop value
+```
+```text
+[0.   0.25 0.5  0.75 1.  ]
+[ 0.  5. 10.]
+[0. 2. 4. 6. 8.]
+```
+
+- `start` and `stop` are **both included** by default.
+- `num` is *how many points* you get, **not** the step size. This makes it ideal for smooth plotting ranges.
+
+#### `np.zeros(shape)` and `np.ones(shape)`: pre-filled placeholders
+
+```python
+print(np.zeros((2, 3)))          # shape is a tuple: (rows, columns)
+print(np.ones((2, 2)))
+print(np.zeros(3, dtype=int))    # choose the dtype explicitly
+```
+```text
+[[0. 0. 0.]
+ [0. 0. 0.]]
+[[1. 1.]
+ [1. 1.]]
+[0 0 0]
+```
+
+- `shape` is passed as a **tuple**.
+- Values are floats (`0.` and `1.`) unless you pass `dtype`.
+
+---
+
+### Module 2: Shape and Structure
+
+**Learning objective:** rearrange the same data into a new shape, and flatten it back to 1-D.
+
+**Guiding questions**
+1. Why must the total number of elements stay the same when reshaping (12 = 3 × 4)? What does `-1` do?
+2. What is the difference between `ravel()` (a view when possible) and `flatten()` (always a copy)?
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_reshape.png"
+       alt="Diagram: a 1-D array of six values reshaped into (2, 3) and (3, 2) layouts" width="720">
+</p>
+
+#### `a.reshape(new_shape)`
+
+```python
+a = np.arange(12)
+r = a.reshape(3, 4)
+print(r)
+print(a.reshape(2, -1).shape, a.reshape(-1, 3).shape)   # -1 = "work it out for me"
+
+r[0, 0] = 99                       # r is a view of a ...
+print(a[0], np.shares_memory(a, r))   # ... so a changed too
+```
+```text
+[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+(2, 6) (4, 3)
+99 True
+```
+
+- The total element count must stay the same (12 = 3 × 4).
+- It returns a **view** when possible, so no data is copied and changes propagate.
+- Pass `-1` for one dimension and NumPy computes it.
+
+#### `a.ravel()` and `a.flatten()`
+
+```python
+a = np.arange(12)
+r = a.reshape(3, 4)
+
+print(r.ravel())              # flat 1-D view (no copy when possible)
+f = r.flatten()               # flat 1-D copy (always)
+f[0] = -1
+print(r[0, 0], f[0])          # original untouched
+```
+```text
+[ 0  1  2  3  4  5  6  7  8  9 10 11]
+0 -1
+```
+
+> [!TIP]
+> Use `ravel()` for speed. Use `flatten()` (or `.copy()`) when you plan to modify the result without touching the original.
+
+---
+
+### Module 3: Indexing and Slicing
+
+**Learning objective:** access a single element, a whole row or column, or a rectangular sub-block.
+
+**Guiding questions**
+1. What do `a[:, 1]` and `a[0:2, 1:3]` select?
+2. Why is the end of a slice excluded (`start:stop`)?
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_indexing.png"
+       alt="Diagram: highlighting elements of a 3x2 array with data[0,1], data[1:3], and data[0:2,0]" width="760">
+</p>
+
+```python
+m = np.arange(1, 13).reshape(3, 4)     # [[ 1  2  3  4]
+                                       #  [ 5  6  7  8]
+                                       #  [ 9 10 11 12]]
+print(m[1, 2])        # single element: row 1, column 2
+print(m[:, 1])        # entire column 1
+print(m[1, :])        # entire row 1
+print(m[0:2, 1:3])    # sub-block: rows 0-1, columns 1-2
+print(m[-1, -1])      # negative index: last row, last column
+print(m[:, ::2])      # every 2nd column
+```
+```text
+7
+[ 2  6 10]
+[5 6 7 8]
+[[2 3]
+ [6 7]]
+12
+[[ 1  3]
+ [ 5  7]
+ [ 9 11]]
+```
+
+| Syntax | Meaning |
+|---|---|
+| `a[row, col]` | One element |
+| `a[:, col]` | The whole column |
+| `a[row, :]` | The whole row |
+| `a[r1:r2, c1:c2]` | A sub-block (`r2` and `c2` excluded) |
+
+> [!WARNING]
+> Slices are **views**, not copies. Modifying a slice modifies the original array. Use `.copy()` if you need independence.
+
+---
+
+### Module 4: Vectorized Operations and Broadcasting
+
+**Learning objective:** apply operations to whole arrays without loops, and predict when arrays of different shapes are compatible.
+
+**Guiding questions**
+1. Can an array of shape `(2, 3)` be added to one of shape `(3,)`? Why?
+2. What is the compatibility rule? (Each pair of dimensions must be equal, or one of them must be 1.)
+
+#### Vectorized operations
+
+```python
+a = np.array([1, 2, 3])
+b = np.array([10, 20, 30])
+
+print(a + b)     # elementwise sum
+print(a * b)     # elementwise product
+print(a ** 2)    # elementwise power
+print(b / a)     # elementwise division
+print(a > 1)     # comparisons work too -> boolean array
+```
+```text
+[11 22 33]
+[10 40 90]
+[1 4 9]
+[10. 10. 10.]
+[False  True  True]
+```
+
+- Arithmetic (`+ - * / **`) and comparisons are applied **elementwise, automatically**.
+- It is far faster than looping over elements in plain Python.
+
+#### Broadcasting
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/broadcasting_1.svg"
+       alt="Diagram: array a of shape (3) multiplied by b of shape (1), where b is stretched to three values, giving [2, 4, 6]" width="600">
+</p>
+
+```python
+m   = np.array([[1, 2, 3],
+                [4, 5, 6]])            # shape (2, 3)
+v   = np.array([10, 20, 30])           # shape (3,)
+col = np.array([[10], [20]])           # shape (2, 1)
+
+print(m + v)       # v is stretched across every row
+print(m + col)     # col is stretched across every column
+print(m * 2)       # a scalar is the simplest case
+```
+```text
+[[11 22 33]
+ [14 25 36]]
+[[11 12 13]
+ [24 25 26]]
+[[ 2  4  6]
+ [ 8 10 12]]
+```
+
+**The rule:** compare shapes from the **rightmost** dimension to the left. Two dimensions are compatible if they are **equal** or **one of them is 1**. Otherwise NumPy raises a `ValueError`.
+
+```mermaid
+flowchart TD
+    S(["Compare the two shapes<br/>starting from the RIGHT"]) --> Q{"For every pair of dimensions:<br/>equal, or one of them is 1?"}
+    Q -- "Yes" --> OK(["Broadcasting works<br/>result uses the larger size"])
+    Q -- "No" --> ERR(["ValueError:<br/>operands could not be broadcast together"])
+```
+
+---
+
+### Module 5: Aggregations
+
+**Learning objective:** reduce an array to summary numbers, either over everything or along one axis.
+
+**Guiding questions**
+1. What is the difference between `axis=0` (sum down each column) and `axis=1` (sum across each row)?
+2. Why does `argmax` return a flat index even for a 2-D array, and how do you convert it to `(row, col)`?
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_aggregation.png"
+       alt="Diagram: a 3x2 array with .max() giving 6, .min() giving 1, and .sum() giving 21" width="760">
+</p>
+
+**Understanding `axis`** (for a 3×4 array):
+
+```text
+              axis=1  ──►   (collapses columns: one result per ROW)
+            ┌─────────────────┐
+   axis=0   │  1   2   3   4  │   sum(axis=1) -> [10, 26, 42]
+     │      │  5   6   7   8  │
+     ▼      │  9  10  11  12  │
+            └─────────────────┘
+   sum(axis=0) -> [15, 18, 21, 24]         sum() -> 78
+   (collapses rows: one result per COLUMN)
+```
+
+#### `sum()`
+
+```python
+a = np.array([[1, 2, 3],
+              [4, 5, 6]])
+
+print(a.sum())          # every element -> one number
+print(a.sum(axis=0))    # down each column
+print(a.sum(axis=1))    # across each row
+```
+```text
+21
+[5 7 9]
+[ 6 15]
+```
+
+#### `mean()`
+
+```python
+print(a.mean(), a.mean(axis=0), a.mean(axis=1))
+print(a.sum() / a.size)            # identical to mean()
+```
+```text
+3.5 [2.5 3.5 4.5] [2. 5.]
+3.5
+```
+
+> The mean is **sensitive to outliers**, unlike the median.
+
+#### `std()` and `var()`
+
+```python
+x = np.array([2, 4, 4, 4, 5, 5, 7, 9])
+
+print(x.var())               # average squared deviation from the mean
+print(x.std())               # square root of the variance (same units as data)
+print(x.std(ddof=1).round(4))  # sample standard deviation
+```
+```text
+4.0
+2.0
+2.1381
+```
+
+- Both default to **population** statistics (`ddof=0`). Use `ddof=1` for a sample.
+
+#### `min()` and `max()`
+
+```python
+print(a.min(), a.max())
+print(a.min(axis=1), a.max(axis=0))
+
+# np.minimum / np.maximum compare two arrays elementwise
+print(np.minimum(np.array([1, 5, 3]), np.array([4, 2, 6])))
+```
+```text
+1 6
+[1 4] [4 5 6]
+[1 2 3]
+```
+
+#### `argmin()` and `argmax()`
+
+```python
+z = np.array([[7, 3, 9],
+              [4, 8, 1]])
+
+print(np.argmin(z), np.argmax(z))               # flat indices
+print(np.unravel_index(z.argmax(), z.shape))    # back to (row, col)
+print(np.array([3, 7, 7, 1]).argmax())          # tie -> first match only
+```
+```text
+5 2
+(np.int64(0), np.int64(2))
+1
+```
+
+---
+
+### Module 6: Combining and Querying
+
+**Learning objective:** join arrays, choose values by condition, order and de-duplicate data, and filter with boolean masks.
+
+**Guiding questions**
+1. When should you use `stack` instead of `concatenate`? (`stack` creates a **new** axis.)
+2. How do you combine two conditions in one mask, and why `&` / `|` rather than `and` / `or`?
+
+#### `np.concatenate()`: join along an *existing* axis
+
+```python
+a = np.array([[1, 2],
+              [3, 4]])
+b = np.array([[5, 6]])
+
+print(np.concatenate([a, b]))                # axis=0 (default): stack rows
+print(np.concatenate([a, b.T], axis=1))      # axis=1: add a column
+```
+```text
+[[1 2]
+ [3 4]
+ [5 6]]
+[[1 2 5]
+ [3 4 6]]
+```
+
+- Shapes must match **except along the join axis**. The result keeps the same number of dimensions.
+
+#### `np.stack()`: join along a *brand-new* axis
+
+```python
+p = np.array([1, 2, 3])
+q = np.array([4, 5, 6])
+
+print(np.stack([p, q]))                 # new axis at position 0 -> shape (2, 3)
+print(np.stack([p, q], axis=1))         # new axis at position 1 -> shape (3, 2)
+```
+```text
+[[1 2 3]
+ [4 5 6]]
+[[1 4]
+ [2 5]
+ [3 6]]
+```
+
+- All inputs must have the **exact same shape**. The result has **one more dimension**.
+
+#### `np.where()`: choose values elementwise by a condition
+
+```python
+x = np.array([1, -2, 3, -4, 5])
+
+print(np.where(x > 0, x, 0))     # keep x where True, else 0
+print(np.where(x > 0)[0])        # with only a condition -> matching indices
+```
+```text
+[1 0 3 0 5]
+[0 2 4]
+```
+
+#### `np.sort()` and `np.unique()`
+
+```python
+x = np.array([3, 1, 2, 3, 1, 5])
+
+print(np.sort(x), x)                       # np.sort returns a NEW array
+print(np.unique(x))                        # sorted, duplicates removed
+print(np.unique(x, return_counts=True))    # also count each value
+```
+```text
+[1 1 2 3 3 5] [3 1 2 3 1 5]
+[1 2 3 5]
+(array([1, 2, 3, 5]), array([2, 1, 2, 1]))
+```
+
+- `x.sort()` sorts **in place**; `np.sort(x)` returns a new sorted array.
+
+#### Boolean masking
+
+```python
+x = np.array([1, 3, 2, 5, 4, 3])
+
+mask = x > 2
+print(mask)
+print(x[mask])                     # keep only the True positions
+print(x[(x > 1) & (x < 5)])        # AND  (parentheses are required)
+print(x[(x < 2) | (x > 4)])        # OR
+print(x[~mask])                    # NOT
+```
+```text
+[False  True False  True  True  True]
+[3 5 4 3]
+[3 2 4 3]
+[1 5]
+[1 2]
+```
+
+---
+
+### Module 7: Matrix Math and Linear Algebra
+
+**Learning objective:** distinguish elementwise multiplication from matrix multiplication, and use `numpy.linalg` to measure, invert, and solve.
+
+**Guiding questions**
+1. Why is `A * B` **not** true matrix multiplication? What is the correct operator?
+2. Why is `solve(A, b)` preferred over `inv(A) @ b`? What does `det(A) = 0` mean?
+
+#### Addition, elementwise product, and matrix product
+
+```python
+A = np.array([[1, 2],
+              [3, 4]])
+B = np.array([[0, 1],
+              [1, 0]])
+
+print(A + B)          # elementwise
+print(A * B)          # elementwise product (NOT matrix multiplication)
+print(A @ B)          # true matrix multiplication
+print(np.dot(A, B))   # same result as A @ B
+```
+```text
+[[1 3]
+ [4 4]]
+[[0 2]
+ [3 0]]
+[[2 1]
+ [4 3]]
+[[2 1]
+ [4 3]]
+```
+
+- `+` and `*` need the **same shape** and work position by position.
+- For `A @ B`, the number of columns of `A` must equal the number of rows of `B`. Each output cell is a **row · column** dot product.
+
+#### Transpose
+
+```python
+M = np.array([[1, 2, 3],
+              [4, 5, 6]])
+
+print(A.T)
+print(M.shape, M.T.shape)
+```
+```text
+[[1 3]
+ [2 4]]
+(2, 3) (3, 2)
+```
+
+- Rows become columns and columns become rows. It returns a **view**. It is often needed to align shapes before a matrix product.
+
+#### `np.linalg.norm()`: the length of a vector
+
+```python
+v = np.array([3, 4])
+print(np.linalg.norm(v))            # Euclidean (L2): sqrt(3^2 + 4^2)
+print(np.linalg.norm(v, ord=1))     # L1: sum of absolute values
+```
+```text
+5.0
+7.0
+```
+
+#### `np.linalg.det()`: the determinant
+
+```python
+print(np.linalg.det(A).round(2))                       # 1*4 - 2*3 = -2
+print(np.linalg.det(np.array([[1, 2], [2, 4]])))       # singular matrix
+```
+```text
+-2.0
+0.0
+```
+
+- Defined only for **square** matrices. `det = 0` means the matrix is **singular** (not invertible).
+
+#### `np.linalg.inv()`: the inverse
+
+```python
+Ainv = np.linalg.inv(A)
+print(Ainv)
+print((A @ Ainv).round(10))         # identity matrix
+```
+```text
+[[-2.   1. ]
+ [ 1.5 -0.5]]
+[[1. 0.]
+ [0. 1.]]
+```
+
+- `A @ inv(A)` gives the **identity matrix**. It exists only when `det(A) ≠ 0`.
+
+#### `np.linalg.solve()`: solve `Ax = b`
+
+```python
+# 2x +  y = 3
+#  x + 3y = 5
+A = np.array([[2, 1],
+              [1, 3]])
+b = np.array([3, 5])
+
+print(np.linalg.solve(A, b))
+```
+```text
+[0.8 1.4]
+```
+
+- Solves for `x` directly. **Faster and more numerically stable** than `inv(A) @ b`.
+
+---
+
+### Quick Reference Cheat Sheet
+
+| Task | Code | Notes |
+|---|---|---|
+| Array from list | `np.array([1, 2, 3])` | One shared dtype |
+| Range with step | `np.arange(0, 10, 2)` | `stop` excluded |
+| N evenly spaced points | `np.linspace(0, 1, 5)` | `stop` included |
+| Zeros / ones | `np.zeros((2, 3))`, `np.ones((2, 2))` | Shape is a tuple |
+| Reshape | `a.reshape(3, 4)`, `a.reshape(2, -1)` | Same element count |
+| Flatten | `a.ravel()` / `a.flatten()` | View / copy |
+| Element / row / column | `a[i, j]`, `a[i, :]`, `a[:, j]` | Zero-based |
+| Sub-block | `a[r1:r2, c1:c2]` | End excluded |
+| Elementwise math | `a + b`, `a * b`, `a ** 2` | Broadcasting applies |
+| Sum / mean | `a.sum(axis=0)`, `a.mean(axis=1)` | `axis=0` per column |
+| Spread | `a.std()`, `a.var()` | `ddof=1` for a sample |
+| Extremes | `a.min()`, `a.max()` | Accept `axis` |
+| Positions of extremes | `a.argmin()`, `a.argmax()` | Flat index, first match |
+| Join (existing axis) | `np.concatenate([a, b], axis=0)` | Shapes match except the axis |
+| Join (new axis) | `np.stack([a, b], axis=0)` | Identical shapes |
+| Conditional pick | `np.where(cond, x, y)` | Elementwise |
+| Sort / unique | `np.sort(x)`, `np.unique(x, return_counts=True)` | Both return sorted results |
+| Filter | `x[x > 2]`, `x[(x > 1) & (x < 5)]` | `&` and, `\|` or, `~` not |
+| Matrix product | `A @ B` | Not `A * B` |
+| Transpose | `A.T` | A view |
+| Length of vector | `np.linalg.norm(v)` | L2 by default |
+| Determinant / inverse | `np.linalg.det(A)`, `np.linalg.inv(A)` | Square matrices only |
+| Solve `Ax = b` | `np.linalg.solve(A, b)` | Preferred over `inv(A) @ b` |
+
+---
+
+## 3. Worked Examples with Step-by-Step Solutions
+
+### Example 1: Create, reshape, and slice
+
+**Problem:** create the numbers 1–12, arrange them as a 3×4 matrix, then extract the element `7`, the first column, and the middle block.
 
 ```python
 import numpy as np                 # (1)
@@ -91,8 +720,6 @@ print(m[0:2, 1:3])                 # (7)
 print(m.reshape(2, -1).shape)      # (8)
 print(m.ravel())                   # (9)
 ```
-
-**المخرجات:**
 ```text
 [[ 1  2  3  4]
  [ 5  6  7  8]
@@ -106,22 +733,25 @@ print(m.ravel())                   # (9)
 [ 1  2  3  4  5  6  7  8  9 10 11 12]
 ```
 
-**الشرح خطوة بخطوة:**
-1. نستورد المكتبة باسمها المعتاد `np`.
-2. `arange(1, 13)` تنتج 1…12؛ الرقم 13 مستبعَد لأن `stop` حصرية.
-3. `reshape(3, 4)` تعيد ترتيب العناصر الـ12 في 3 صفوف و4 أعمدة (3 × 4 = 12).
-4. `shape` هي `(3, 4)` و`ndim` هو 2 (بُعدان).
-5. `m[1, 2]` هي الصف رقم 1 والعمود رقم 2، والعدّ يبدأ من الصفر، فالناتج 7.
-6. `m[:, 0]` النقطتان `:` تعنيان «كل الصفوف»، فنحصل على العمود الأول `[1 5 9]`.
-7. `m[0:2, 1:3]` الصفان 0–1 والعمودان 1–2 (النهايتان مستبعَدتان).
-8. `-1` تجعل NumPy تحسب البُعد المتبقي بنفسها: 12 ÷ 2 = 6، فالشكل `(2, 6)`.
-9. `ravel()` تسطّح المصفوفة إلى بُعد واحد وتعيد عرضًا (View) متى أمكن.
+**Solution, step by step**
+
+| Step | Explanation |
+|---|---|
+| (1) | Import NumPy under its conventional alias `np`. |
+| (2) | `arange(1, 13)` produces 1 to 12; `13` is excluded because `stop` is exclusive. |
+| (3) | `reshape(3, 4)` rearranges the 12 elements into 3 rows × 4 columns (3 × 4 = 12). |
+| (4) | `shape` is `(3, 4)` and `ndim` is `2` (two dimensions). |
+| (5) | `m[1, 2]` is row 1, column 2. Counting starts at 0, so the value is `7`. |
+| (6) | `m[:, 0]`: the colon means "all rows", so we get the first column. |
+| (7) | `m[0:2, 1:3]`: rows 0–1 and columns 1–2 (end indices excluded). |
+| (8) | `-1` lets NumPy compute the missing dimension: 12 ÷ 2 = 6, so `(2, 6)`. |
+| (9) | `ravel()` flattens back to 1-D and returns a view when possible. |
 
 ---
 
-### المثال 2: التجميعات على المحاور — درجات الطلاب
+### Example 2: Aggregations by axis (student grades)
 
-**المسألة:** لدينا درجات 4 طلاب في 3 مواد. احسب متوسط كل مادة ومتوسط كل طالب، وأعلى درجة وموضعها، وحدّد الناجحين (متوسط ≥ 75).
+**Problem:** four students took three subjects. Find the average of each subject, the average of each student, the highest score and its position, and who passed (average ≥ 75).
 
 ```python
 import numpy as np
@@ -138,34 +768,35 @@ print(g.max(), g.argmax())         # (5)
 print(np.unravel_index(g.argmax(), g.shape))   # (6)
 
 avg = g.mean(axis=1)               # (7)
-print(np.where(avg >= 75, "ناجح", "راسب"))     # (8)
+print(np.where(avg >= 75, "Pass", "Fail"))     # (8)
 ```
-
-**المخرجات:**
 ```text
 (4, 3)
 [68.75 78.25 83.  ]
 [81.67 71.67 91.67 61.67]
 95 6
 (np.int64(2), np.int64(0))
-['ناجح' 'راسب' 'ناجح' 'راسب']
+['Pass' 'Fail' 'Pass' 'Fail']
 ```
 
-**الشرح خطوة بخطوة:**
-1. كل صف يمثّل طالبًا وكل عمود مادة؛ نمرّر قائمة قوائم فتصبح المصفوفة ثنائية الأبعاد.
-2. الشكل `(4, 3)`: أربعة طلاب وثلاث مواد.
-3. `axis=0` تُطوي الصفوف، فنحصل على متوسط **كل عمود** (كل مادة): 68.75 و78.25 و83.
-4. `axis=1` تُطوي الأعمدة، فنحصل على متوسط **كل صف** (كل طالب)، ثم نقرّب لرقمين عشريين.
-5. أعلى درجة 95، وترتيبها المسطَّح 6 (العدّ بعد تسطيح المصفوفة صفًّا صفًّا).
-6. نحوّل الفهرس المسطَّح إلى `(صف، عمود) = (2, 0)`: الطالب الثالث في المادة الأولى.
-7. نحفظ متوسطات الطلاب لنعيد استخدامها.
-8. `np.where(الشرط، إن_صح، إن_خطأ)` تختار عنصريًّا: الطالبان الأول والثالث ناجحان.
+**Solution, step by step**
+
+| Step | Explanation |
+|---|---|
+| (1) | Each row is a student and each column is a subject. A list of lists becomes a 2-D array. |
+| (2) | Shape `(4, 3)`: four students, three subjects. |
+| (3) | `axis=0` collapses the rows, giving the mean of **each column** (each subject). |
+| (4) | `axis=1` collapses the columns, giving the mean of **each row** (each student), rounded to 2 decimals. |
+| (5) | The highest score is `95`, at flat position `6` (counting row by row after flattening). |
+| (6) | `unravel_index` converts flat index 6 to `(row 2, column 0)`: the third student, first subject. |
+| (7) | Store the per-student averages for reuse. |
+| (8) | `np.where(condition, if_true, if_false)` decides elementwise: students 1 and 3 passed. |
 
 ---
 
-### المثال 3: البث (Broadcasting) — طرح متوسط كل عمود
+### Example 3: Broadcasting (center each column)
 
-**المسألة:** اطرح متوسط كل مادة من درجات الطلاب (ما يُعرف بتمركز البيانات Centering) دون أي حلقة.
+**Problem:** subtract each subject's average from the grades (this is called *centering*) with **no loop**.
 
 ```python
 import numpy as np
@@ -182,8 +813,6 @@ centered = g - means               # (3)
 print(centered)
 print(centered.mean(axis=0))       # (4)
 ```
-
-**المخرجات:**
 ```text
 (4, 3) (3,)
 [[  1.25   6.75   7.  ]
@@ -193,19 +822,23 @@ print(centered.mean(axis=0))       # (4)
 [0. 0. 0.]
 ```
 
-**الشرح خطوة بخطوة:**
-1. نحسب متوسط كل عمود، والنتيجة متجه من 3 عناصر.
-2. الشكلان `(4, 3)` و`(3,)`. نقارن الأبعاد من اليمين: 3 و3 متساويان، والبُعد الآخر غير موجود في الثاني فيُعامَل كأنه 1، فالتوافق قائم.
-3. يُمدَّد المتجه تلقائيًا على كل صف من `g` ثم يُطرح عنصرًا بعنصر، دون نسخ يدوي أو `tile`.
-4. تحقّق: متوسط كل عمود بعد التمركز صفر، أي أن العملية صحيحة.
+**Solution, step by step**
 
-> لو حاولت جمع شكلين مثل `(2, 3)` و`(2,)` لظهر `ValueError` لأن 3 ≠ 2 وليس أيٌّ منهما 1.
+| Step | Explanation |
+|---|---|
+| (1) | Compute the mean of every column; the result is a vector of 3 values. |
+| (2) | Shapes are `(4, 3)` and `(3,)`. Comparing from the right: `3` and `3` are equal; the second array has no more dimensions, so it is treated as having size 1. They are compatible. |
+| (3) | NumPy stretches the vector across every row of `g` automatically, then subtracts elementwise. No `tile`, no loop. |
+| (4) | Sanity check: after centering, each column's mean is `0`. |
+
+> [!NOTE]
+> Adding shapes `(2, 3)` and `(2,)` would fail: comparing from the right, `3 ≠ 2` and neither is `1`, so NumPy raises a `ValueError`.
 
 ---
 
-### المثال 4: القناع المنطقي، و`where`، و`unique`
+### Example 4: Boolean masks, `where`, and `unique`
 
-**المسألة:** في المصفوفة `x = [1, 3, 2, 5, 4, 3]` اختر القيم الأكبر من 2، ثم القيم التي تقع بين 1 و5 (استثناءً)، ثم استبدل الباقي بصفر، ثم عُدّ تكرار كل قيمة.
+**Problem:** for `x = [1, 3, 2, 5, 4, 3]`, select values greater than 2, then values strictly between 1 and 5, replace the rest with 0, and count how often each value appears.
 
 ```python
 import numpy as np
@@ -220,8 +853,6 @@ print(np.where(x > 2, x, 0))        # (4)
 vals, counts = np.unique(x, return_counts=True)   # (5)
 print(vals, counts)
 ```
-
-**المخرجات:**
 ```text
 [False  True False  True  True  True]
 [3 5 4 3]
@@ -230,18 +861,21 @@ print(vals, counts)
 [1 2 3 4 5] [1 1 2 1 1]
 ```
 
-**الشرح خطوة بخطوة:**
-1. المقارنة `x > 2` تُنتج مصفوفة منطقية بالحجم نفسه (القناع).
-2. الفهرسة بالقناع تُبقي المواضع `True` فقط.
-3. نجمع شرطين بـ`&` (و) مع **الأقواس الإلزامية** حول كل شرط؛ ولمعنى «أو» نستخدم `|`.
-4. `where(x > 2, x, 0)` تُبقي قيمة `x` حيث يتحقق الشرط وتضع 0 في غيره.
-5. `unique(..., return_counts=True)` تُرجع القيم الفريدة مرتَّبة مع عدد تكرار كل منها؛ القيمة 3 تكررت مرتين.
+**Solution, step by step**
+
+| Step | Explanation |
+|---|---|
+| (1) | The comparison `x > 2` produces a boolean array of the same shape (the **mask**). |
+| (2) | Indexing with the mask keeps only the `True` positions. |
+| (3) | Combine conditions with `&` (and) and put **each condition in parentheses**. Use `\|` for "or". |
+| (4) | `where(x > 2, x, 0)` keeps `x` where the condition holds and uses `0` elsewhere. |
+| (5) | `unique(..., return_counts=True)` returns the sorted unique values and how often each occurs; `3` appears twice. |
 
 ---
 
-### المثال 5: الجبر الخطي — حل جملة معادلتين
+### Example 5: Linear algebra (solve a 2×2 system)
 
-**المسألة:** حلّ الجملة `2x + y = 3` و`x + 3y = 5`، ثم تحقّق من الحل.
+**Problem:** solve `2x + y = 3` and `x + 3y = 5`, then verify the solution.
 
 ```python
 import numpy as np
@@ -257,8 +891,6 @@ print(np.allclose(A @ x, b))        # (5)
 print(np.linalg.inv(A))             # (6)
 print(np.linalg.norm(np.array([3, 4])))   # (7)
 ```
-
-**المخرجات:**
 ```text
 5.0
 [0.8 1.4]
@@ -268,233 +900,207 @@ True
 5.0
 ```
 
-**الشرح خطوة بخطوة:**
-1. مصفوفة المعاملات `A` (كل صف معادلة).
-2. متجه الطرف الأيمن `b`.
-3. المحدِّد `det(A) = 2×3 − 1×1 = 5`، وهو لا يساوي صفرًا، فالمصفوفة قابلة للقلب ولدينا حل وحيد. نقرّب لأن الحساب العشري قد يعطي `5.000000000000001`.
-4. `solve(A, b)` تحلّ `Ax = b` مباشرة وهي أسرع وأكثر ثباتًا عدديًا من `inv(A) @ b`. الحل: `x = 0.8` و`y = 1.4`.
-5. التحقق: `A @ x` (ضرب مصفوفات حقيقي) يجب أن يساوي `b`؛ نستعمل `allclose` لتجاوز فروق التقريب.
-6. المعكوس `inv(A)`؛ ضربه في `A` يعطي مصفوفة الوحدة (تقريبًا).
-7. المعيار الإقليدي للمتجه `(3, 4)` هو √(3² + 4²) = 5.
+**Solution, step by step**
+
+| Step | Explanation |
+|---|---|
+| (1) | The coefficient matrix `A` (each row is one equation). |
+| (2) | The right-hand-side vector `b`. |
+| (3) | `det(A) = 2·3 − 1·1 = 5 ≠ 0`, so `A` is invertible and the solution is unique. We round because floating point can print `5.000000000000001`. |
+| (4) | `solve(A, b)` solves `Ax = b` directly. Result: `x = 0.8`, `y = 1.4`. |
+| (5) | Verify with a real matrix product: `A @ x` must equal `b`. `allclose` tolerates tiny rounding errors. |
+| (6) | The inverse `inv(A)`. Multiplying it by `A` gives the identity matrix. |
+| (7) | The Euclidean norm of `(3, 4)` is `√(3² + 4²) = 5`. |
 
 ---
 
-## تصور بصري بسيط وروابط لأمثلة رسومية جاهزة، مع تعليمات استخدام الصور بشكل احترافي (دقة/أبعاد/تنسيق)
+### Practice Exercises
 
-### أ) وصف المخطط المفاهيمي
+Try each one before opening the solution.
 
-المخطط التالي يلخّص مسار المحاضرة، وهو **Mermaid** تعرضه GitHub تلقائيًا (لا يحتاج ملف صورة):
+**Exercise 1.** Create the numbers 1 to 20, reshape them into a `(4, 5)` matrix, and compute the sum of each row.
 
-```mermaid
-flowchart LR
-    A["1 إنشاء المصفوفة<br/>array / arange / zeros"] --> B["2 الشكل<br/>reshape / ravel"]
-    B --> C["3 الفهرسة<br/>a[r, c]"]
-    C --> D["4 العمليات والبث<br/>+ * ** / Broadcasting"]
-    D --> E["5 التجميعات<br/>sum / mean / axis"]
-    E --> F["6 الدمج والاستعلام<br/>stack / where / mask"]
-    F --> G["7 الجبر الخطي<br/>@ / det / solve"]
+<details>
+<summary>Show solution</summary>
+
+```python
+n = np.arange(1, 21).reshape(4, 5)
+print(n.sum(axis=1))
 ```
-
-وتوضّح الصورة النصية التالية اتجاه المحاور في التجميعات (مصفوفة 3×4):
-
 ```text
-              axis=1  ──►  (عبر الأعمدة → نتيجة لكل صف)
-            ┌────────────────┐
-   axis=0   │  1   2   3   4 │   sum(axis=1) → [10, 26, 42]
-     │      │  5   6   7   8 │
-     ▼      │  9  10  11  12 │
-            └────────────────┘
-   sum(axis=0) → [15, 18, 21, 24]      المجموع الكلي sum() → 78
+[15 40 65 90]
 ```
+`axis=1` collapses the columns, giving one total per row.
+</details>
 
-### ب) صور جاهزة من المستودع الرسمي لـ NumPy
+**Exercise 2.** Given `t = [22, 25, 19, 30, 28, 17]`, print the mean and every temperature above the mean.
 
-الروابط مثبَّتة على الوسم `v2.3.0` حتى لا تنكسر إذا تغيّر الفرع الرئيسي، وقد جرى التحقق من وجودها وقياس أبعادها.
+<details>
+<summary>Show solution</summary>
 
-| # | الموضوع | الرابط | التنسيق | الأبعاد الأصلية |
-|---|---------|--------|---------|-----------------|
-| 1 | مفهوم البث (Broadcasting) | [broadcasting_1.svg](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/broadcasting_1.svg) | SVG (متجهي) | ‏137.5 × 50.7 مم (نسبة ≈ 2.7:1) |
-| 2 | الفهرسة والتقطيع | [np_matrix_indexing.png](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_indexing.png) | PNG | ‏3278 × 899 بكسل |
-| 3 | التجميعات على المحاور | [np_matrix_aggregation.png](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_aggregation.png) | PNG | ‏3278 × 833 بكسل |
+```python
+t = np.array([22, 25, 19, 30, 28, 17])
+print(t.mean().round(2), t[t > t.mean()])
+```
+```text
+23.5 [25 30 28]
+```
+A boolean mask built from `t > t.mean()` filters the array.
+</details>
 
-**كود التضمين الجاهز (ينسخه الطالب كما هو):**
+**Exercise 3.** Standardize each column of the grades matrix (z-score): subtract the column mean and divide by the column standard deviation. Verify that every column then has mean 0 and std 1.
+
+<details>
+<summary>Show solution</summary>
+
+```python
+g = np.array([[70, 85, 90], [60, 75, 80], [95, 88, 92], [50, 65, 70]])
+z = (g - g.mean(axis=0)) / g.std(axis=0)
+
+print(z.round(2))
+print(np.allclose(z.mean(axis=0), 0), z.std(axis=0).round(6))
+```
+```text
+[[ 0.07  0.75  0.8 ]
+ [-0.52 -0.36 -0.34]
+ [ 1.57  1.08  1.03]
+ [-1.12 -1.47 -1.48]]
+True [1. 1. 1.]
+```
+Two broadcasting operations (subtract, then divide) and no loops.
+</details>
+
+**Exercise 4.** Solve `3x + 2y = 12` and `x − y = 1`.
+
+<details>
+<summary>Show solution</summary>
+
+```python
+A = np.array([[3, 2], [1, -1]])
+b = np.array([12, 1])
+print(np.linalg.solve(A, b))
+```
+```text
+[2.8 1.8]
+```
+Check: `3(2.8) + 2(1.8) = 12` and `2.8 − 1.8 = 1`.
+</details>
+
+---
+
+## 4. Visual Illustrations and Image Guidelines
+
+### A) Concept diagrams
+
+The learning-path and broadcasting diagrams in [Section 1](#1-introduction-and-learning-goals) and [Module 4](#module-4-vectorized-operations-and-broadcasting) are **Mermaid** blocks. GitHub renders them natively, so they need no image files, stay editable as text, and adapt to light and dark themes.
+
+The axis diagram in [Module 5](#module-5-aggregations) is plain text, so it works in any viewer.
+
+**Shape cheat table:** how the same 2-D data behaves under each operation.
+
+| Operation on shape `(3, 4)` | Result shape | Meaning |
+|---|---|---|
+| `a.sum()` | scalar | Everything combined |
+| `a.sum(axis=0)` | `(4,)` | One value per column |
+| `a.sum(axis=1)` | `(3,)` | One value per row |
+| `a.T` | `(4, 3)` | Rows and columns swapped |
+| `a.reshape(2, 6)` | `(2, 6)` | Same 12 values, new layout |
+| `a.ravel()` | `(12,)` | Flattened |
+
+### B) Ready-to-use images (official NumPy repository)
+
+Links are pinned to the `v2.3.0` tag so they will not break if the main branch changes. Each was verified to exist and measured.
+
+| # | Topic | Link | Format | Original size |
+|---|---|---|---|---|
+| 1 | Broadcasting | [broadcasting_1.svg](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/broadcasting_1.svg) | SVG (vector) | 137.5 × 50.7 mm (about 2.7 : 1) |
+| 2 | Indexing and slicing | [np_matrix_indexing.png](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_indexing.png) | PNG | 3278 × 899 px |
+| 3 | Aggregations | [np_matrix_aggregation.png](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_aggregation.png) | PNG | 3278 × 833 px |
+| 4 | Reshape (bonus) | [np_reshape.png](https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_reshape.png) | PNG | 3234 × 1129 px |
+
+**Embed snippet:**
 
 ```html
 <p align="center">
-  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/broadcasting_1.svg"
-       alt="رسم يوضح مدّ متجه صغير ليطابق مصفوفة أكبر في البث" width="640">
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/numpy/numpy/v2.3.0/doc/source/user/images/np_matrix_indexing.png"
-       alt="رسم يوضح فهرسة وتقطيع مصفوفة ثنائية الأبعاد" width="800">
+  <img src="assets/images/np_matrix_indexing.png"
+       alt="Diagram showing data[0,1], data[1:3], and data[0:2,0] on a 3x2 array"
+       width="760">
 </p>
 ```
 
-### ج) تعليمات الاستخدام الاحترافي للصور
+### C) Professional image usage
 
-| البند | التوصية |
-|-------|---------|
-| **التنسيق** | استخدم **SVG** للمخططات والأشكال (تتكيّف مع أي دقة وحجمها صغير)، و**PNG** للّقطات والصور ذات النصوص الدقيقة. تجنّب JPEG للمخططات لأنه يشوّش الحواف والنص. |
-| **عرض العرض** | في README اجعل العرض بين **640 و800 بكسل** (عمود المحتوى في GitHub نحو 880 بكسل). حدّده بالسمة `width` ولا تضع `height` كي تبقى النسبة سليمة. |
-| **الدقة** | للنسخ التي تحفظها في مشروعك صدِّر PNG بعرض **1600 بكسل** (ضعف عرض العرض) لتبدو حادّة على الشاشات عالية الكثافة. الصور أعلاه بعرض 3278 بكسل أكبر مما يلزم، فقلّصها. |
-| **الحجم** | اجعل كل صورة **أقل من 300 كيلوبايت** قدر الإمكان (أدوات: `oxipng` أو `pngquant` أو `svgo`). |
-| **الحفظ** | انسخ الصور إلى `assets/images/` بأسماء وصفية بأحرف صغيرة وشرطات (`broadcasting-diagram.svg`)، واستعمل مسارات نسبية كي يعمل المستودع دون اتصال. |
-| **النص البديل** | اكتب `alt` وصفيًا بالعربية لكل صورة (إتاحة الوصول لقارئات الشاشة). |
-| **الوضع الداكن** | الصور ذات الخلفية الشفافة قد تختفي في الوضع الداكن؛ استعمل خلفية بيضاء أو عنصر `<picture>` بنسختين. |
-| **الترخيص** | صور NumPy الرسمية من مستودع مفتوح المصدر؛ راجع ملف `LICENSE.txt` في المستودع، واذكر المصدر عند إعادة استخدامها. |
+| Topic | Recommendation |
+|---|---|
+| **Format** | **SVG** for diagrams and illustrations (sharp at any zoom, tiny files). **PNG** for screenshots and images with fine text. Avoid JPEG for diagrams because it blurs edges and text. |
+| **Display width** | **640–800 px** in a README (GitHub's content column is about 880 px). Set `width` and omit `height` so the aspect ratio is preserved. |
+| **Resolution** | For images you host yourself, export PNGs at **about 1600 px wide** (2× the display width) so they stay crisp on high-density screens. The originals above (3278 px) are larger than needed, so downscale them. |
+| **File size** | Aim for **under 300 KB** per image. Tools: `oxipng` or `pngquant` for PNG, `svgo` for SVG. |
+| **Storage** | Copy images into `assets/images/` and reference them with **relative paths**, using lowercase kebab-case names such as `broadcasting-diagram.svg`. |
+| **Alt text** | Always write a descriptive `alt` for accessibility and for when images fail to load. |
+| **Dark mode** | Transparent images with dark text can vanish on GitHub's dark theme. Use a solid background, or supply two versions through a `<picture>` element with `prefers-color-scheme`. |
+| **Licensing** | These images come from the open-source NumPy repository. Check its `LICENSE.txt` and credit the source when you reuse them. |
 
 ---
 
-## متطلبات وأدوات الورشة (المتوقع من الطلاب التنفيذ، البيئة التطويرية)، مع خطوات التثبيت والتشغيل
+## 5. Workshop Requirements and Setup
 
-### المتطلبات
+### Prerequisites
 
-- **Python 3.11 أو أحدث** (NumPy 2.4.x يتطلب 3.11 فأعلى؛ الإصدارات الأقدم من NumPy تدعم بايثون الأقدم).
-- معرفة أساسية ببايثون: المتغيرات والقوائم والحلقات والدوال.
-- محرر أكواد (VS Code أو PyCharm) أو **JupyterLab** للتجريب التفاعلي.
-- **Git** لاستنساخ المستودع.
+- **Python 3.11 or newer.** NumPy 2.4.x requires 3.11+; older NumPy releases support older Python versions.
+- Basic Python: variables, lists, loops, and functions.
+- A code editor (VS Code or PyCharm) or **JupyterLab** for interactive experiments.
+- **Git** to clone the repository.
 
-### خطوات التثبيت
+### Installation
 
 ```bash
-# 1) استنساخ المستودع
-git clone https://github.com/<اسم-المستخدم>/numpy-workshop.git
+# 1) Clone the repository
+git clone https://github.com/<your-username>/numpy-workshop.git
 cd numpy-workshop
 
-# 2) إنشاء بيئة افتراضية
+# 2) Create a virtual environment
 python -m venv .venv
 
-# تفعيلها:
+# 3) Activate it
 source .venv/bin/activate          # Linux / macOS
 .venv\Scripts\activate             # Windows (PowerShell / CMD)
 
-# 3) تثبيت الاعتمادات
-pip install --upgrade pip
-pip install numpy jupyterlab matplotlib
-# أو: pip install -r requirements.txt
+# 4) Install dependencies
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 
-# 4) التحقق من التثبيت
+# 5) Verify the installation
 python -c "import numpy as np; print(np.__version__)"
 ```
 
-### التشغيل
+**`requirements.txt`**
 
-```bash
-# تشغيل مثال محدد
-python examples/01_creation_and_indexing.py
-
-# أو العمل تفاعليًا
-jupyter lab
-```
-
-**محتوى `requirements.txt` المقترح:**
 ```text
 numpy>=2.0
 jupyterlab>=4.0
 matplotlib>=3.8
 ```
 
-> **استكشاف الأخطاء:** إذا ظهر `ModuleNotFoundError: No module named 'numpy'` فتأكد أن البيئة الافتراضية مفعَّلة وأن المفسِّر الذي تشغّل به هو نفسه الذي ثبَّتّ فيه المكتبة (`python -m pip install numpy`).
+### Run locally
 
----
+```bash
+# Run a single example script
+python examples/01_creation_and_indexing.py
 
-## أسئلة شائعة وإجاباتها
+# Or work interactively
+jupyter lab
+```
 
-<details>
-<summary><strong>ما الفرق بين قائمة بايثون ومصفوفة NumPy؟</strong></summary>
-
-المصفوفة تخزّن عناصر من **نوع واحد** في ذاكرة متجاورة وتدعم العمليات المتجهية السريعة. القائمة تقبل أنواعًا مختلطة لكنها أبطأ في الحسابات العددية، وعند إنشاء مصفوفة من قائمة تُحوَّل كل العناصر إلى `dtype` مشترك.
-</details>
-
-<details>
-<summary><strong>هل <code>A * B</code> هو ضرب المصفوفات؟</strong></summary>
-
-لا. `*` ضرب **عنصر بعنصر** ويتطلب الشكل نفسه (أو شكلين متوافقين للبث). لضرب المصفوفات الحقيقي استخدم `A @ B` أو `np.dot(A, B)`، بشرط أن يساوي عدد أعمدة `A` عدد صفوف `B`.
-</details>
-
-<details>
-<summary><strong>ماذا يعني <code>axis</code> بالضبط؟</strong></summary>
-
-`axis=0` تُطوي الصفوف فتحصل على نتيجة لكل **عمود**، و`axis=1` تُطوي الأعمدة فتحصل على نتيجة لكل **صف**. من دون `axis` تُحسب الدالة على كل العناصر وتُعاد قيمة واحدة.
-</details>
-
-<details>
-<summary><strong>هل <code>reshape</code> و<code>ravel</code> ينسخان البيانات؟</strong></summary>
-
-كلاهما يعيد عرضًا (View) على البيانات نفسها متى أمكن، فالتعديل عبره قد ينعكس على الأصل. إذا أردت نسخة مستقلة فاستخدم `.copy()`، أو `flatten()` التي تعيد نسخة دائمًا.
-</details>
-
-<details>
-<summary><strong>لماذا يحصل <code>std()</code> و<code>var()</code> على قيم تختلف عن حساباتي اليدوية للعيّنة؟</strong></summary>
-
-القيمة الافتراضية `ddof=0` تحسب إحصاءات **المجتمع** (القسمة على n). لحساب تباين العيّنة (القسمة على n − 1) مرّر `ddof=1`، مثل `a.std(ddof=1)`.
-</details>
-
-<details>
-<summary><strong>ما سبب الخطأ <code>operands could not be broadcast together</code>؟</strong></summary>
-
-الشكلان غير متوافقين مع قاعدة البث: عند مقارنة الأبعاد من اليمين، يجب أن يتساوى كل بُعدين أو يكون أحدهما 1. اطبع `a.shape` و`b.shape` لتحدّد البُعد المتعارض، ثم عدّل الشكل بـ`reshape` أو أضف بُعدًا بـ`b[:, None]`.
-</details>
-
-<details>
-<summary><strong>متى أستخدم <code>solve</code> ومتى <code>inv</code>؟</strong></summary>
-
-لحل `Ax = b` استخدم `np.linalg.solve(A, b)` فهي أسرع وأدقّ عدديًا. استعمل `inv` فقط عندما تحتاج المعكوس نفسه. وكلاهما يتطلب مصفوفة مربعة غير شاذّة (`det ≠ 0`).
-</details>
-
-<details>
-<summary><strong>لماذا <code>argmax</code> تعيد رقمًا واحدًا لمصفوفة ثنائية؟</strong></summary>
-
-لأنها تعيد الفهرس بعد تسطيح المصفوفة، ولا تعيد إلا أول تطابق عند التساوي. حوّله إلى (صف، عمود) بـ`np.unravel_index(a.argmax(), a.shape)`، أو مرّر `axis` للحصول على موضع الأقصى لكل صف أو عمود.
-</details>
-
-<details>
-<summary><strong>لماذا لا أستخدم <code>and</code>/<code>or</code> في القناع المنطقي؟</strong></summary>
-
-لأنها تعمل على قيمة منطقية مفردة وتُظهر خطأ مع المصفوفات. استخدم `&` و`|` و`~` مع وضع كل شرط بين قوسين: `x[(x > 1) & (x < 5)]`.
-</details>
-
----
-
-## مصادر ومراجع مقبولة مع روابطها
-
-**مصادر رسمية (بالإنجليزية):**
-
-| المصدر | الرابط |
-|--------|--------|
-| موقع NumPy الرسمي — قسم التعلّم (مجموعة مختارة من الدروس) | <https://numpy.org/learn/> |
-| NumPy: The Absolute Basics for Beginners | <https://numpy.org/doc/stable/user/absolute_beginners.html> |
-| NumPy Quickstart Tutorial | <https://numpy.org/doc/stable/user/quickstart.html> |
-| Broadcasting — دليل المستخدم | <https://numpy.org/doc/stable/user/basics.broadcasting.html> |
-| مرجع الجبر الخطي `numpy.linalg` | <https://numpy.org/doc/stable/reference/routines.linalg.html> |
-| تعليمات التثبيت الرسمية | <https://numpy.org/install/> |
-| مستودع NumPy Tutorials (دفاتر Jupyter) | <https://github.com/numpy/numpy-tutorials> |
-
-**مصادر مساندة:**
-
-| المصدر | اللغة | الرابط |
-|--------|-------|--------|
-| مكتبة NumPy — الخطوة الأولى في علم البيانات (عالم البرمجة) | العربية | <https://3alam.pro/ibr/articles/python-numpy> |
-| شرح مكتبة NumPy للمبتدئين — قائمة تشغيل على YouTube (بلهجة مصرية) | العربية | <https://www.youtube.com/playlist?list=PLvsVwFBrUFQoMuwrcmPzMRLROMqDCOaYS> |
-| W3Schools — NumPy Tutorial (أمثلة تفاعلية وتمارين) | الإنجليزية | <https://www.w3schools.com/python/numpy/default.asp> |
-| GeeksforGeeks — Introduction to NumPy | الإنجليزية | <https://www.geeksforgeeks.org/python/introduction-to-numpy/> |
-
-**المادة الأصلية للمحاضرة:** عرض «NumPy» من إعداد وتقديم **فريق TriNode**.
-
----
-
-## بنية ملف README مقترحة ومعيارية (مع نموذج تنسيق جاهز)
-
-### أ) بنية المستودع المقترحة
+### Suggested project layout
 
 ```text
 numpy-workshop/
-├── README.md                 ← هذا الملف
+├── README.md
 ├── requirements.txt
 ├── LICENSE
 ├── assets/
-│   └── images/               ← الصور والمخططات
+│   └── images/                       # diagrams and illustrations
 ├── examples/
 │   ├── 01_creation_and_indexing.py
 │   ├── 02_aggregations.py
@@ -504,84 +1110,246 @@ numpy-workshop/
 ├── notebooks/
 │   └── workshop.ipynb
 └── exercises/
-    └── README.md             ← التمارين والحلول
+    └── README.md                     # practice problems and solutions
 ```
 
-### ب) قالب Markdown جاهز للنسخ
+### What students are expected to do
+
+1. Read each module, then **type the code yourself** (do not just copy it).
+2. Change the numbers and predict the output before running.
+3. Complete the four practice exercises in [Section 3](#practice-exercises).
+4. Print `.shape` and `.dtype` whenever a result surprises you.
+
+> [!TIP]
+> **Troubleshooting:** if you see `ModuleNotFoundError: No module named 'numpy'`, make sure the virtual environment is activated and that you installed with the same interpreter you run: `python -m pip install numpy`.
+
+---
+
+## 6. Frequently Asked Questions
+
+<details>
+<summary><strong>What is the difference between a Python list and a NumPy array?</strong></summary>
+
+<br>
+
+A NumPy array stores elements of **one type** in contiguous memory and supports fast vectorized operations. A list can hold mixed types but is much slower for numeric work. When you build an array from a list, every element is cast to one shared `dtype`.
+</details>
+
+<details>
+<summary><strong>Is <code>A * B</code> matrix multiplication?</strong></summary>
+
+<br>
+
+No. `*` multiplies **element by element** and needs the same shape (or shapes that broadcast). For true matrix multiplication use `A @ B` or `np.dot(A, B)`, where the number of columns of `A` equals the number of rows of `B`.
+</details>
+
+<details>
+<summary><strong>What exactly does <code>axis</code> mean?</strong></summary>
+
+<br>
+
+`axis=0` collapses the rows, giving one result per **column**. `axis=1` collapses the columns, giving one result per **row**. With no `axis`, the function works over every element and returns a single value.
+</details>
+
+<details>
+<summary><strong>Do <code>reshape</code>, <code>ravel</code>, and slicing copy the data?</strong></summary>
+
+<br>
+
+They return **views** whenever possible, so modifying the result can change the original. Call `.copy()` for an independent array. `flatten()` always returns a copy.
+</details>
+
+<details>
+<summary><strong>Why do <code>std()</code> and <code>var()</code> differ from my sample statistics?</strong></summary>
+
+<br>
+
+They default to **population** statistics (`ddof=0`, dividing by n). For a sample (dividing by n − 1) pass `ddof=1`, for example `a.std(ddof=1)`.
+</details>
+
+<details>
+<summary><strong>What does "operands could not be broadcast together" mean?</strong></summary>
+
+<br>
+
+The two shapes break the broadcasting rule: comparing from the right, some pair of dimensions is neither equal nor 1. Print `a.shape` and `b.shape` to find the clash, then fix it with `reshape`, or add an axis with `b[:, None]`.
+</details>
+
+<details>
+<summary><strong>When should I use <code>solve</code> and when <code>inv</code>?</strong></summary>
+
+<br>
+
+To solve `Ax = b`, use `np.linalg.solve(A, b)`. It is faster and more numerically stable. Use `inv` only when you actually need the inverse matrix. Both require a square, non-singular matrix (`det ≠ 0`).
+</details>
+
+<details>
+<summary><strong>Why does <code>argmax</code> return a single number for a 2-D array?</strong></summary>
+
+<br>
+
+It returns the index into the **flattened** array, and only the **first** match if there is a tie. Convert it with `np.unravel_index(a.argmax(), a.shape)`, or pass `axis` to get one position per row or column.
+</details>
+
+<details>
+<summary><strong>Why can't I use <code>and</code> / <code>or</code> in a boolean mask?</strong></summary>
+
+<br>
+
+Python's `and` / `or` expect a single truth value and raise an error on arrays. Use `&`, `|`, and `~`, and wrap each condition in parentheses: `x[(x > 1) & (x < 5)]`.
+</details>
+
+<details>
+<summary><strong>Why is <code>arange</code> with float steps sometimes surprising?</strong></summary>
+
+<br>
+
+Floating-point rounding can make the number of elements differ from what you expect. When you care about the exact count, use `np.linspace(start, stop, num)`, which takes the number of points directly.
+</details>
+
+---
+
+## 7. Sources and References
+
+**Official documentation**
+
+| Resource | Link |
+|---|---|
+| NumPy: Learn (curated tutorials and books) | <https://numpy.org/learn/> |
+| NumPy: The Absolute Basics for Beginners | <https://numpy.org/doc/stable/user/absolute_beginners.html> |
+| NumPy Quickstart Tutorial | <https://numpy.org/doc/stable/user/quickstart.html> |
+| Broadcasting (User Guide) | <https://numpy.org/doc/stable/user/basics.broadcasting.html> |
+| `numpy.linalg` reference | <https://numpy.org/doc/stable/reference/routines.linalg.html> |
+| Installation guide | <https://numpy.org/install/> |
+| NumPy Tutorials (Jupyter notebooks) | <https://github.com/numpy/numpy-tutorials> |
+
+**Supplementary learning**
+
+| Resource | Language | Link |
+|---|---|---|
+| W3Schools: NumPy Tutorial (interactive examples and exercises) | English | <https://www.w3schools.com/python/numpy/default.asp> |
+| GeeksforGeeks: Introduction to NumPy | English | <https://www.geeksforgeeks.org/python/introduction-to-numpy/> |
+| Aalam Al-Barmaja: NumPy, the first step in data science | Arabic | <https://3alam.pro/ibr/articles/python-numpy> |
+| NumPy beginner playlist on YouTube (Egyptian dialect) | Arabic | <https://www.youtube.com/playlist?list=PLvsVwFBrUFQoMuwrcmPzMRLROMqDCOaYS> |
+
+**Original lecture material:** the "NumPy" slide deck prepared and presented by the **TriNode Team**.
+
+---
+
+## 8. README Structure and Ready-to-Use Template
+
+### A) Recommended section order
+
+| # | Section | Purpose |
+|---|---|---|
+| 1 | Hero header (logo, title, tagline, badges, quick links) | First impression and navigation |
+| 2 | Summary table (level, duration, versions) | At-a-glance facts |
+| 3 | Table of contents | Fast navigation |
+| 4 | Introduction and goals | Context and outcomes |
+| 5 | Content with objectives and guiding questions | The syllabus |
+| 6 | Worked examples and exercises | Practice |
+| 7 | Visuals | Understanding |
+| 8 | Setup and run | Reproducibility |
+| 9 | FAQ | Reduce repeated questions |
+| 10 | References, contributing, license | Credibility |
+
+### B) Copy-paste template
 
 ````markdown
-<div dir="rtl">
+<div align="center">
 
-# عنوان المشروع أو المحاضرة
+<img src="assets/images/logo.svg" alt="Project logo" width="200">
 
-> جملة واحدة تصف الهدف · **المستوى:** … · **المدة:** … · **آخر تحديث:** YYYY-MM-DD
+# Project Title
 
-![الترخيص](https://img.shields.io/badge/license-MIT-blue)
-![Python](https://img.shields.io/badge/python-3.11%2B-green)
+### One-line tagline describing the value
 
-## فهرس المحتويات
-- [مقدمة](#مقدمة)
-- [المحتوى](#المحتوى)
-- [الأمثلة](#الأمثلة)
-- [التصور البصري](#التصور-البصري)
-- [التثبيت والتشغيل](#التثبيت-والتشغيل)
-- [الأسئلة الشائعة](#الأسئلة-الشائعة)
-- [المراجع](#المراجع)
-- [المساهمة والترخيص](#المساهمة-والترخيص)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-## مقدمة
-فقرة قصيرة: ما الموضوع؟ لماذا يهم؟ مخرجات التعلّم في 3–5 نقاط.
+[Introduction](#1-introduction-and-learning-goals) ·
+[Content](#2-content-and-objectives) ·
+[Setup](#3-setup-and-run)
 
-## المحتوى
-### 1) عنوان النقطة
-- **الهدف:** …
-- **أسئلة موجِّهة:** …
+</div>
 
-## الأمثلة
-### المثال 1: العنوان
-**المسألة:** …
+---
+
+| | |
+|---|---|
+| **Presented by** | Name / Team |
+| **Level** | Beginner |
+| **Duration** | 90 minutes |
+| **Last updated** | YYYY-MM-DD |
+
+## Table of Contents
+1. [Introduction and Learning Goals](#1-introduction-and-learning-goals)
+2. [Content and Objectives](#2-content-and-objectives)
+3. [Setup and Run](#3-setup-and-run)
+
+## 1. Introduction and Learning Goals
+Short paragraph: what is it, why does it matter. Then 3-5 outcomes:
+1. ...
+2. ...
+
+## 2. Content and Objectives
+### Module 1: Title
+**Learning objective:** ...
+
+**Guiding questions**
+1. ...
+2. ...
+
 ```python
-# الكود مع رقم لكل سطر مهم
+# minimal, runnable code with comments
 ```
-**المخرجات:** …
-**الشرح:** 1) … 2) …
+```text
+# real output
+```
 
-## التصور البصري
-<p align="center"><img src="assets/images/diagram.svg" alt="وصف" width="720"></p>
+> [!TIP]
+> A practical hint.
 
-## التثبيت والتشغيل
+## 3. Setup and Run
 ```bash
 git clone <repo-url> && cd <repo>
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## الأسئلة الشائعة
+## FAQ
 <details>
-<summary><strong>السؤال؟</strong></summary>
+<summary><strong>Question?</strong></summary>
 
-الإجابة.
+<br>
+
+Answer.
 </details>
 
-## المراجع
-- [اسم المصدر](https://example.com)
+## References
+- [Source name](https://example.com)
 
-## المساهمة والترخيص
-المساهمات مرحَّب بها عبر Pull Request. الترخيص: MIT (انظر `LICENSE`).
-
-</div>
+## Contributing and License
+Pull requests are welcome. Licensed under MIT (see `LICENSE`).
 ````
 
-### ج) إرشادات التنسيق لصفحة GitHub
+### C) Formatting guidelines for a polished GitHub page
 
-- **الاتجاه من اليمين لليسار:** لُفّ المحتوى كله بـ`<div dir="rtl">` واترك **سطرًا فارغًا** بعد وسم الفتح وقبل وسم الإغلاق كي يُفسَّر Markdown داخله. إذا ظهرت كتل الأكواد بمحاذاة غير مناسبة فهي تبقى مقروءة لأنها باللاتينية.
-- **العناوين:** عنوان `#` واحد فقط للمشروع، ثم `##` للأقسام السبعة و`###` للفروع. أبقِ العناوين قصيرة لأن GitHub يبني منها الروابط الداخلية تلقائيًا.
-- **الأكواد:** استعمل حاويات مسوَّرة مع تحديد اللغة (`python` و`bash` و`text` و`html`) للحصول على التلوين.
-- **المخرجات:** ضعها في كتلة `text` منفصلة عن الكود.
-- **الأسئلة الشائعة:** استعمل `<details>` لطيّ الإجابات وتقصير الصفحة.
-- **التنبيهات:** استعمل `> **ملاحظة:**` أو صيغة GitHub `> [!NOTE]` و`> [!WARNING]`.
-- **المخططات:** فضّل كتل ` ```mermaid ` فهي تُعرض أصلًا في GitHub وتبقى قابلة للتحرير كنص.
-- **الروابط:** ثبّت روابط الصور والملفات الخارجية على وسم إصدار (Tag) أو Commit لا على الفرع الرئيسي.
-- **الطول:** إذا تجاوز README حوالي 500 سطر فانقل التمارين والتفاصيل إلى `docs/` أو `exercises/` واربطها منه.
+- **One `#` heading only** (the project title). Use `##` for sections and `###` for sub-sections.
+- **Predictable anchors:** GitHub builds heading links by lowercasing, dropping punctuation, and replacing spaces with hyphens. Avoid `&`, `:`, and `/` in headings you link to.
+- **Code fences always name a language** (`python`, `bash`, `text`, `html`) for syntax highlighting. Put program **output** in a separate `text` block.
+- **Callouts:** use GitHub alerts `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, and `> [!IMPORTANT]`.
+- **Tables** for reference material, **lists** for steps, and `<details>` to collapse long answers.
+- **Diagrams** as Mermaid blocks so they render natively and remain editable.
+- **Pin external links** to a tag or commit instead of `main`.
+- **Length:** if the README grows past roughly 500 lines, move deep-dive content to `docs/` or `exercises/` and link to it.
+
+---
+
+<div align="center">
+
+**Presented by TriNode Team** · Built with NumPy
+
+*Found a mistake or have an improvement? Open an issue or a pull request.*
 
 </div>
