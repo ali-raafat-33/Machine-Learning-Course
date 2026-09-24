@@ -1234,38 +1234,6 @@ Floating-point rounding can make the number of elements differ from what you exp
 
 **Original lecture material:** the "NumPy" slide deck prepared and presented by the **TriNode Team**.
 
----
-
-## 8. README Structure and Ready-to-Use Template
-
-### A) Recommended section order
-
-| # | Section | Purpose |
-|---|---|---|
-| 1 | Hero header (logo, title, tagline, badges, quick links) | First impression and navigation |
-| 2 | Summary table (level, duration, versions) | At-a-glance facts |
-| 3 | Table of contents | Fast navigation |
-| 4 | Introduction and goals | Context and outcomes |
-| 5 | Content with objectives and guiding questions | The syllabus |
-| 6 | Worked examples and exercises | Practice |
-| 7 | Visuals | Understanding |
-| 8 | Setup and run | Reproducibility |
-| 9 | FAQ | Reduce repeated questions |
-| 10 | References, contributing, license | Credibility |
-
-### C) Formatting guidelines for a polished GitHub page
-
-- **One `#` heading only** (the project title). Use `##` for sections and `###` for sub-sections.
-- **Predictable anchors:** GitHub builds heading links by lowercasing, dropping punctuation, and replacing spaces with hyphens. Avoid `&`, `:`, and `/` in headings you link to.
-- **Code fences always name a language** (`python`, `bash`, `text`, `html`) for syntax highlighting. Put program **output** in a separate `text` block.
-- **Callouts:** use GitHub alerts `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, and `> [!IMPORTANT]`.
-- **Tables** for reference material, **lists** for steps, and `<details>` to collapse long answers.
-- **Diagrams** as Mermaid blocks so they render natively and remain editable.
-- **Pin external links** to a tag or commit instead of `main`.
-- **Length:** if the README grows past roughly 500 lines, move deep-dive content to `docs/` or `exercises/` and link to it.
-
----
-
 <div align="center">
 
 **Presented by TriNode Team** · Built with NumPy
