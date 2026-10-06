@@ -1,14 +1,4 @@
-from pathlib import Path
 
-readme = r'''# 🐍 Python for the ML Journey
-
-> **Pure Python fundamentals for Machine Learning — no ML libraries required.**
-
-This lecture introduces the core Python concepts that you will see again and again when working with Machine Learning notebooks.
-
-The goal is not to learn Python in isolation. The examples are written around **datasets, features, labels, predictions, metrics, cross-validation, and model results** so that you can connect Python syntax directly to ML work.
-
----
 
 ## 🎯 Learning Objectives
 
