@@ -59,10 +59,10 @@ Each cluster is represented by its center, the **centroid** (the mean of its poi
 ```python
 from sklearn.cluster import KMeans
 
-km = KMeans(n_clusters=4, n_init=10, random_state=0).fit(X)
-km.labels_            # cluster of each point
-km.cluster_centers_   # the centroids
-km.inertia_           # within-cluster sum of squares
+Model = KMeans(n_clusters=4, n_init=10, random_state=0).fit(X)
+Model.labels_            # cluster of each point
+Model.cluster_centers_   # the centroids
+Model.inertia_           # within-cluster sum of squares
 ```
 
 **Good to know**
